@@ -1,0 +1,12 @@
+---
+description: Private GitHub repos and feature-branch PR flow
+alwaysApply: true
+---
+
+# GitHub workflow
+
+- Repositories are **private** by default. Never create a public repo unless the user explicitly asks.
+- Do all feature work on `feature/{feature-detail}` (lowercase, hyphens). Examples: `feature/slice-5-ui`, `feature/add-sim-picker`.
+- Never commit directly to `main`. Open a pull request from the feature branch into `main`.
+- PR title/body should summarize why; include a short test plan when behavior changes.
+- After merge, continue from updated `main` (or the next `feature/...` branch).

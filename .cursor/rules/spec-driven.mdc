@@ -1,0 +1,13 @@
+---
+description: Follow specs/ for planning and implementation (spec-driven design)
+alwaysApply: true
+---
+
+# Spec-driven workflow
+
+- Before planning or coding, read `specs/000-product/` and any relevant `specs/NNN-*/` folder.
+- Prefer committed specs over chat memory when they conflict.
+- New features: copy `.cursor/skills/spec-driven-design/templates/` into `specs/NNN-name/`, fill overview → requirements → architecture → tasks, then implement.
+- Behavior or design changes must update the matching spec in the same change set.
+- Leave unknowns as `TBD`; do not invent product requirements.
+- For the full workflow, use the project skill `spec-driven-design`.
