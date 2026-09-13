@@ -21,4 +21,8 @@ Product and feature work starts in [`specs/`](specs/). Bootstrap guide: [`PROJEC
 
 ## Repository
 
-Private GitHub repo. Work on `feature/{feature-detail}` and open PRs into `main`.
+- **Remote:** https://github.com/intellerX/enterprise-systematizer-landing (private)
+- **Flow:** branch `feature/{feature-detail}` → pull request into `main` (never commit straight to `main`)
+- **Init guide:** [`PROJECT_INIT.md`](PROJECT_INIT.md)
+
+Local path on this device: `/home/orca/orca/projects/enterprise-systematizer-landing`
