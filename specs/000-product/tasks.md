@@ -83,4 +83,4 @@ Ordered by dependency. Each task references requirement IDs.
 - [x] Dark-only UI; no operator email visible or in `src/`
 - [x] Content editable without touching presentational components
 - [x] Methodology, metrics, AI-agents are detailed sections
-- [ ] PR opened via GitHub flow
+- [x] PR opened via GitHub flow
