@@ -1,0 +1,188 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  background: rgba(11, 15, 20, 0.82);
+  border-bottom: 1px solid var(--line);
+  min-height: var(--header-h);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  max-width: min(70vw, 22rem);
+}
+
+.brandMark {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  flex-shrink: 0;
+}
+
+.brandText {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.menuToggle {
+  min-height: 44px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.nav {
+  display: none;
+}
+
+.navOpen {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--header-h);
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
+  padding: 1rem;
+  max-height: calc(100vh - var(--header-h));
+  overflow: auto;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.navButton,
+.navLink {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  padding: 0.7rem 0.4rem;
+  min-height: 44px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.panel {
+  border-left: 2px solid var(--accent);
+  margin: 0.25rem 0 0.75rem 0.4rem;
+  padding-left: 0.75rem;
+}
+
+.panelList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.panelLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-decoration: none;
+  padding: 0.55rem 0.35rem;
+  border-radius: 8px;
+}
+
+.panelLink:hover {
+  background: var(--bg-2);
+}
+
+.panelLink small {
+  color: var(--text-muted);
+}
+
+.cta {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .menuToggle {
+    display: none;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: static;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    flex-direction: row;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .navList {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .navItem {
+    position: relative;
+  }
+
+  .navButton,
+  .navLink {
+    width: auto;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.92rem;
+  }
+
+  .panel {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    left: 0;
+    width: min(36rem, 70vw);
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-1);
+    box-shadow: var(--shadow);
+  }
+
+  .panelList {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  .cta {
+    width: auto;
+    margin-left: 0.5rem;
+  }
+}

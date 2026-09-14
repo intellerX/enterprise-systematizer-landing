@@ -1,0 +1,48 @@
+.banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  background: rgba(17, 24, 33, 0.96);
+  border-top: 1px solid var(--line);
+  padding: 1rem 0;
+  box-shadow: var(--shadow);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inner p {
+  margin: 0.4rem 0 0;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.actions .btn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .actions {
+    flex-direction: row;
+    flex-shrink: 0;
+  }
+
+  .actions .btn {
+    width: auto;
+  }
+}

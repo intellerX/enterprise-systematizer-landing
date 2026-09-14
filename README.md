@@ -1,24 +1,56 @@
 # Enterprise Systematizer Landing
 
-Private landing-page application for **Enterprise Systematizer**.
+Dark-mode marketing site for **Pragmatic AI Software Engineering** — React + TypeScript (Next.js App Router).
 
-## Naming
+## Non-negotiables
 
-| Form | Value |
-| ---- | ----- |
-| Product title | EnterpriseSystematizerLanding |
-| Folder / GitHub repo | `enterprise-systematizer-landing` |
+- Dark theme only (no light toggle)
+- Lead inbox is **server-only** via `LEAD_TO_EMAIL` — never shown on the page
+- Spec-driven work under [`specs/000-product/`](specs/000-product/)
 
-## Spec-driven design
+## Setup
 
-Product and feature work starts in [`specs/`](specs/). Bootstrap guide: [`PROJECT_INIT.md`](PROJECT_INIT.md).
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
+```
 
-| Path | Role |
-| ---- | ---- |
-| [`specs/000-product/`](specs/000-product/) | Living product context |
-| `.cursor/skills/spec-driven-design/` | Blank templates + workflow |
-| `.cursor/skills/react-responsive/` | React + responsive UI |
+Open [http://localhost:3000](http://localhost:3000).
+
+### Environment
+
+| Variable | Where | Purpose |
+| -------- | ----- | ------- |
+| `LEAD_TO_EMAIL` | server only | Destination for consultation leads (never `NEXT_PUBLIC_*`) |
+| `LEAD_ADAPTER` | server | `mock` (default) or `email` |
+| `RESEND_API_KEY` / `LEAD_FROM_EMAIL` | server | Optional real email send when `LEAD_ADAPTER=email` |
+| `NEXT_PUBLIC_SITE_URL` | public | Absolute URLs for sitemap / OG |
+
+## Scripts
+
+| Command | Purpose |
+| ------- | ------- |
+| `npm run dev` | Local development |
+| `npm run build` / `start` | Production build & serve |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript |
+| `npm run test` | Vitest unit/component tests |
+| `npm run test:e2e` | Playwright (build + start first, or use config webServer) |
+| `npm run ci` | lint + typecheck + test + build |
+
+## Content editing
+
+Edit typed modules under `src/content/` (services, industries, methodology, metrics, assessment, insights, navigation, site copy). Presentational components read that data — avoid hardcoding marketing copy in UI files.
+
+English UI strings: `src/i18n/en.ts`.
+
+## Architecture notes
+
+- Contact: `POST /api/contact` → validate → honeypot → rate limit → `LeadAdapter`
+- Assessment: client-side scoring in `src/lib/assessment/scoring.ts` (future `POST /api/assessment` documented in code)
+- Specs: [`specs/000-product/`](specs/000-product/)
 
 ## Repository
 
-Private GitHub repo. Work on `feature/{feature-detail}` and open PRs into `main`.
+Private GitHub. Feature branches `feature/{detail}` → PR into `main`.
