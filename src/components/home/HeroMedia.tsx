@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { HeroScene } from "./HeroScene";
 import styles from "./Hero.module.css";
+
+const HeroScene = dynamic(
+  () => import("./HeroScene").then((m) => m.HeroScene),
+  { ssr: false },
+);
 
 type Props = {
   children: React.ReactNode;
@@ -12,22 +17,21 @@ export function HeroMedia({ children }: Props) {
   const rootRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [introReady, setIntroReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [videoFailed, setVideoFailed] = useState(false);
+  const [sceneOn, setSceneOn] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setReducedMotion(mq.matches);
-    queueMicrotask(sync);
+    sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  useEffect(() => {
-    const id = window.requestAnimationFrame(() => setIntroReady(true));
-    return () => window.cancelAnimationFrame(id);
+    // Mount WebGL after paint so a Three failure cannot block the hero video.
+    const t = window.setTimeout(() => setSceneOn(true), 50);
+    return () => {
+      mq.removeEventListener("change", sync);
+      window.clearTimeout(t);
+    };
   }, []);
 
   useEffect(() => {
@@ -36,20 +40,22 @@ export function HeroMedia({ children }: Props) {
 
     video.muted = true;
     video.defaultMuted = true;
+    video.setAttribute("muted", "");
     video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.autoplay = true;
 
-    const tryPlay = async () => {
-      try {
-        await video.play();
-      } catch {
-        setVideoFailed(true);
-      }
+    const tryPlay = () => {
+      void video.play().catch(() => {
+        // Keep the element + poster visible; do not tear down the video.
+      });
     };
 
-    void tryPlay();
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
-    video.addEventListener("error", () => setVideoFailed(true));
     return () => {
+      video.removeEventListener("loadeddata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
     };
   }, [reducedMotion]);
@@ -65,16 +71,12 @@ export function HeroMedia({ children }: Props) {
         if (!root || !media) return;
         const rect = root.getBoundingClientRect();
         const travel = Math.max(rect.height, window.innerHeight);
-        const progress = Math.min(
-          1,
-          Math.max(0, -rect.top / travel),
-        );
+        const progress = Math.min(1, Math.max(0, -rect.top / travel));
         setScrollProgress(progress);
 
-        if (!reducedMotion) {
-          // Stronger, visible parallax on the media stack
-          const shift = progress * 140;
-          const scale = 1.12 + progress * 0.08;
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const shift = progress * 160;
+          const scale = 1.1 + progress * 0.1;
           media.style.transform = `translate3d(0, ${shift}px, 0) scale(${scale})`;
         } else {
           media.style.transform = "none";
@@ -90,16 +92,24 @@ export function HeroMedia({ children }: Props) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [reducedMotion]);
+  }, []);
 
   return (
     <section
       ref={rootRef}
-      className={`${styles.hero} ${introReady ? styles.heroReady : ""}`}
+      className={styles.hero}
       aria-labelledby="hero-brand"
+      data-hero="ready"
     >
       <div className={styles.mediaWrap} ref={mediaRef} aria-hidden>
-        {!reducedMotion && !videoFailed ? (
+        {reducedMotion ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            className={styles.video}
+            src="/media/hero-poster.jpg"
+            alt=""
+          />
+        ) : (
           <video
             ref={videoRef}
             className={styles.video}
@@ -113,15 +123,13 @@ export function HeroMedia({ children }: Props) {
             <source src="/media/hero-ambient.mp4" type="video/mp4" />
             <source src="/media/hero-ambient.webm" type="video/webm" />
           </video>
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            className={styles.video}
-            src="/media/hero-poster.jpg"
-            alt=""
-          />
         )}
-        <HeroScene reducedMotion={reducedMotion} scrollProgress={scrollProgress} />
+        {sceneOn ? (
+          <HeroScene
+            reducedMotion={reducedMotion}
+            scrollProgress={scrollProgress}
+          />
+        ) : null}
         <div className={styles.grade} />
         <div className={styles.veil} />
       </div>
