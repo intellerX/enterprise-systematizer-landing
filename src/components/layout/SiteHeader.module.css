@@ -1,14 +1,16 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 80;
   backdrop-filter: blur(16px) saturate(1.2);
-  background: rgba(11, 15, 20, 0.78);
+  background: rgba(11, 15, 20, 0.86);
   border-bottom: 1px solid var(--line);
   min-height: var(--header-h);
 }
 
 .bar {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,6 +24,7 @@
   gap: 0.7rem;
   text-decoration: none;
   max-width: min(70vw, 22rem);
+  z-index: 3;
 }
 
 .brand:hover {
@@ -45,6 +48,8 @@
 }
 
 .menuToggle {
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -53,7 +58,7 @@
   padding: 0;
   border-radius: 10px;
   border: 1px solid rgba(180, 205, 230, 0.22);
-  background: rgba(24, 34, 48, 0.75);
+  background: rgba(24, 34, 48, 0.9);
   cursor: pointer;
   color: var(--text);
 }
@@ -106,6 +111,17 @@
   transform: rotate(-45deg);
 }
 
+.backdrop {
+  position: fixed;
+  inset: var(--header-h) 0 0;
+  z-index: 1;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: rgba(4, 8, 12, 0.55);
+  cursor: pointer;
+}
+
 .nav {
   display: none;
 }
@@ -118,6 +134,7 @@
   left: 0;
   right: 0;
   top: var(--header-h);
+  z-index: 2;
   background: rgba(17, 24, 33, 0.98);
   border-bottom: 1px solid var(--line);
   padding: 1rem 1rem 1.25rem;
@@ -169,6 +186,12 @@
   border-bottom: 1.5px solid var(--text-muted);
   transform: rotate(45deg);
   margin-top: -0.15rem;
+  transition: transform 160ms ease;
+}
+
+.navItemOpen .chevron {
+  transform: rotate(225deg);
+  margin-top: 0.15rem;
 }
 
 .panel {
@@ -210,7 +233,8 @@
 }
 
 @media (min-width: 1024px) {
-  .menuToggle {
+  .menuToggle,
+  .backdrop {
     display: none !important;
   }
 
@@ -256,22 +280,28 @@
     font-size: 0.9rem;
   }
 
-  .chevron {
-    transform: rotate(45deg) scale(0.9);
-  }
-
   .panel {
     position: absolute;
-    top: calc(100% + 0.35rem);
+    top: 100%;
     left: 0;
     width: min(38rem, 72vw);
     margin: 0;
-    padding: 1rem;
+    /* Hover bridge so the cursor can reach the panel without closing */
+    padding: 0.85rem 1rem 1rem;
     border: 1px solid rgba(180, 205, 230, 0.18);
     border-radius: 12px;
     background: rgba(17, 24, 33, 0.97);
     box-shadow: var(--shadow);
     backdrop-filter: blur(12px);
+  }
+
+  .panel::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    height: 14px;
   }
 
   .panel[hidden] {

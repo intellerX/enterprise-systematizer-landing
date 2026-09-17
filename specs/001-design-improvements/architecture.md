@@ -2,7 +2,7 @@
 
 ## Summary
 
-UI polish in global button tokens + header CSS/JS behavior. Hero gains a client `HeroMedia` layer: local `<video>` (webm/mp4) with poster, CSS intro keyframes, and scroll-linked `transform` for parallax. Color grade overlays keep brand teal/cyan.
+UI polish in global button tokens + header CSS/JS behavior. Hero uses `HeroMedia` with local `<video>`, intro transition, scroll parallax, and a Three.js `HeroScene` of floating glass panels / nodes (2D-looking objects in 3D space) inspired by cinematic sites like typesafe.ai — without copying their assets.
 
 ## Context diagram
 

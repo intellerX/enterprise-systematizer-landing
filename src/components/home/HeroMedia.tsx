@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { HeroScene } from "./HeroScene";
 import styles from "./Hero.module.css";
 
 type Props = {
@@ -10,13 +11,16 @@ type Props = {
 export function HeroMedia({ children }: Props) {
   const rootRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [introReady, setIntroReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [videoFailed, setVideoFailed] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setReducedMotion(mq.matches);
-    sync();
+    queueMicrotask(sync);
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
@@ -27,7 +31,30 @@ export function HeroMedia({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    const video = videoRef.current;
+    if (!video || reducedMotion) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const tryPlay = async () => {
+      try {
+        await video.play();
+      } catch {
+        setVideoFailed(true);
+      }
+    };
+
+    void tryPlay();
+    video.addEventListener("canplay", tryPlay);
+    video.addEventListener("error", () => setVideoFailed(true));
+    return () => {
+      video.removeEventListener("canplay", tryPlay);
+    };
+  }, [reducedMotion]);
+
+  useEffect(() => {
     let frame = 0;
 
     function onScroll() {
@@ -37,11 +64,21 @@ export function HeroMedia({ children }: Props) {
         const media = mediaRef.current;
         if (!root || !media) return;
         const rect = root.getBoundingClientRect();
-        const viewH = window.innerHeight || 1;
-        // Progress while hero is in/near viewport
-        const progress = Math.min(1, Math.max(0, -rect.top / (rect.height || viewH)));
-        const shift = progress * 72; // subtle enterprise parallax
-        media.style.transform = `translate3d(0, ${shift}px, 0) scale(1.08)`;
+        const travel = Math.max(rect.height, window.innerHeight);
+        const progress = Math.min(
+          1,
+          Math.max(0, -rect.top / travel),
+        );
+        setScrollProgress(progress);
+
+        if (!reducedMotion) {
+          // Stronger, visible parallax on the media stack
+          const shift = progress * 140;
+          const scale = 1.12 + progress * 0.08;
+          media.style.transform = `translate3d(0, ${shift}px, 0) scale(${scale})`;
+        } else {
+          media.style.transform = "none";
+        }
       });
     }
 
@@ -62,18 +99,19 @@ export function HeroMedia({ children }: Props) {
       aria-labelledby="hero-brand"
     >
       <div className={styles.mediaWrap} ref={mediaRef} aria-hidden>
-        {!reducedMotion ? (
+        {!reducedMotion && !videoFailed ? (
           <video
+            ref={videoRef}
             className={styles.video}
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster="/media/hero-poster.jpg"
           >
-            <source src="/media/hero-ambient.webm" type="video/webm" />
             <source src="/media/hero-ambient.mp4" type="video/mp4" />
+            <source src="/media/hero-ambient.webm" type="video/webm" />
           </video>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
@@ -83,8 +121,8 @@ export function HeroMedia({ children }: Props) {
             alt=""
           />
         )}
+        <HeroScene reducedMotion={reducedMotion} scrollProgress={scrollProgress} />
         <div className={styles.grade} />
-        <div className={styles.grid} />
         <div className={styles.veil} />
       </div>
       <div className={`container ${styles.content}`}>{children}</div>

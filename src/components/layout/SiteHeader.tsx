@@ -8,11 +8,28 @@ import { en } from "@/i18n/en";
 import { track } from "@/lib/analytics/track";
 import styles from "./SiteHeader.module.css";
 
+function isDesktopNav() {
+  return window.matchMedia("(min-width: 1024px)").matches;
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const menuId = useId();
   const headerRef = useRef<HTMLElement>(null);
+  const closeTimer = useRef<number | null>(null);
+
+  function clearCloseTimer() {
+    if (closeTimer.current != null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function scheduleClose() {
+    clearCloseTimer();
+    closeTimer.current = window.setTimeout(() => setActiveGroup(null), 160);
+  }
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -24,13 +41,20 @@ export function SiteHeader() {
     function onPointerDown(e: MouseEvent) {
       if (!headerRef.current?.contains(e.target as Node)) {
         setActiveGroup(null);
+        setOpen(false);
       }
+    }
+    function onResize() {
+      if (isDesktopNav()) setOpen(false);
     }
     window.addEventListener("keydown", onKey);
     window.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("resize", onResize);
+      clearCloseTimer();
     };
   }, []);
 
@@ -55,7 +79,11 @@ export function SiteHeader() {
           aria-expanded={open}
           aria-controls={menuId}
           aria-label={open ? en.nav.closeMenu : en.nav.openMenu}
-          onClick={() => setOpen((v) => !v)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setActiveGroup(null);
+            setOpen((v) => !v);
+          }}
         >
           <span className={styles.menuIcon} aria-hidden>
             <span className={`${styles.menuBar} ${open ? styles.menuBarTop : ""}`} />
@@ -76,16 +104,15 @@ export function SiteHeader() {
               return (
                 <li
                   key={group.id}
-                  className={styles.navItem}
+                  className={`${styles.navItem} ${expanded ? styles.navItemOpen : ""}`}
                   onMouseEnter={() => {
-                    if (hasChildren && window.matchMedia("(min-width: 1024px)").matches) {
-                      setActiveGroup(group.id);
-                    }
+                    if (!hasChildren || !isDesktopNav()) return;
+                    clearCloseTimer();
+                    setActiveGroup(group.id);
                   }}
                   onMouseLeave={() => {
-                    if (window.matchMedia("(min-width: 1024px)").matches) {
-                      setActiveGroup(null);
-                    }
+                    if (!isDesktopNav()) return;
+                    scheduleClose();
                   }}
                 >
                   {hasChildren ? (
@@ -94,14 +121,17 @@ export function SiteHeader() {
                         type="button"
                         className={styles.navButton}
                         aria-expanded={expanded}
+                        aria-haspopup="true"
                         aria-controls={`${group.id}-panel`}
-                        onClick={() =>
+                        onClick={() => {
+                          clearCloseTimer();
                           setActiveGroup((cur) =>
                             cur === group.id ? null : group.id,
-                          )
-                        }
+                          );
+                        }}
                         onFocus={() => {
-                          if (window.matchMedia("(min-width: 1024px)").matches) {
+                          if (isDesktopNav()) {
+                            clearCloseTimer();
                             setActiveGroup(group.id);
                           }
                         }}
@@ -111,8 +141,13 @@ export function SiteHeader() {
                       </button>
                       <div
                         id={`${group.id}-panel`}
+                        role="region"
+                        aria-label={group.label}
                         className={`${styles.panel} ${expanded ? styles.panelOpen : ""}`}
                         hidden={!expanded}
+                        onMouseEnter={() => {
+                          if (isDesktopNav()) clearCloseTimer();
+                        }}
                       >
                         <ul className={styles.panelList}>
                           {group.children!.map((child) => (
@@ -154,12 +189,21 @@ export function SiteHeader() {
             onClick={() => {
               track("cta_click", { id: "header_contact" });
               setOpen(false);
+              setActiveGroup(null);
             }}
           >
             {en.nav.contact}
           </Link>
         </nav>
       </div>
+      {open ? (
+        <button
+          type="button"
+          className={styles.backdrop}
+          aria-label={en.nav.closeMenu}
+          onClick={() => setOpen(false)}
+        />
+      ) : null}
     </header>
   );
 }
