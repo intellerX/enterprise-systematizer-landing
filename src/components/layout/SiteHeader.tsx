@@ -12,7 +12,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const menuId = useId();
-  const navRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -21,12 +21,28 @@ export function SiteHeader() {
         setActiveGroup(null);
       }
     }
+    function onPointerDown(e: MouseEvent) {
+      if (!headerRef.current?.contains(e.target as Node)) {
+        setActiveGroup(null);
+      }
+    }
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onPointerDown);
+    };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
-    <header className={styles.header}>
+    <header className={styles.header} ref={headerRef}>
       <div className={`container ${styles.bar}`}>
         <Link className={styles.brand} href="/" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />
@@ -38,14 +54,18 @@ export function SiteHeader() {
           className={styles.menuToggle}
           aria-expanded={open}
           aria-controls={menuId}
+          aria-label={open ? en.nav.closeMenu : en.nav.openMenu}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? en.nav.closeMenu : en.nav.openMenu}
+          <span className={styles.menuIcon} aria-hidden>
+            <span className={`${styles.menuBar} ${open ? styles.menuBarTop : ""}`} />
+            <span className={`${styles.menuBar} ${open ? styles.menuBarMid : ""}`} />
+            <span className={`${styles.menuBar} ${open ? styles.menuBarBot : ""}`} />
+          </span>
         </button>
 
         <nav
           id={menuId}
-          ref={navRef}
           className={`${styles.nav} ${open ? styles.navOpen : ""}`}
           aria-label="Primary"
         >
@@ -54,7 +74,20 @@ export function SiteHeader() {
               const hasChildren = !!group.children?.length;
               const expanded = activeGroup === group.id;
               return (
-                <li key={group.id} className={styles.navItem}>
+                <li
+                  key={group.id}
+                  className={styles.navItem}
+                  onMouseEnter={() => {
+                    if (hasChildren && window.matchMedia("(min-width: 1024px)").matches) {
+                      setActiveGroup(group.id);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (window.matchMedia("(min-width: 1024px)").matches) {
+                      setActiveGroup(null);
+                    }
+                  }}
+                >
                   {hasChildren ? (
                     <>
                       <button
@@ -67,8 +100,14 @@ export function SiteHeader() {
                             cur === group.id ? null : group.id,
                           )
                         }
+                        onFocus={() => {
+                          if (window.matchMedia("(min-width: 1024px)").matches) {
+                            setActiveGroup(group.id);
+                          }
+                        }}
                       >
                         {group.label}
+                        <span className={styles.chevron} aria-hidden />
                       </button>
                       <div
                         id={`${group.id}-panel`}
