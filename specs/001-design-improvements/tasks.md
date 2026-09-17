@@ -22,7 +22,7 @@
 
 - [x] Manual check patterns applied for 375 / 768 / 1280
 - [x] `npm run lint` / `typecheck` / `test` / `build`
-- [ ] Open PR
+- [x] Open PR
 
 ## Done when
 
