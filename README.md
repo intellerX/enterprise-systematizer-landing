@@ -1,6 +1,6 @@
-# Enterprise Systematizer Landing
+# intellerX
 
-Dark-mode marketing site for **Pragmatic AI Software Engineering** — React + TypeScript (Next.js App Router).
+Landing oscura de la fábrica de software potenciada por AI. Español por defecto; inglés con la cookie `ix_locale=en`. React + TypeScript (Next.js App Router).
 
 ## Non-negotiables
 
@@ -43,7 +43,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Edit typed modules under `src/content/` (services, industries, methodology, metrics, assessment, insights, navigation, site copy). Presentational components read that data — avoid hardcoding marketing copy in UI files.
 
-English UI strings: `src/i18n/en.ts`.
+Copy de la home: `src/content/landing.ts`. Cromo ES/EN: `src/i18n/es.ts` y `src/i18n/en.ts`. Idioma: cookie `ix_locale` (`es` por defecto).
 
 ## Architecture notes
 

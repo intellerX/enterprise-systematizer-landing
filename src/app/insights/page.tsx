@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { filterInsights, type InsightType } from "@/content/insights";
-import { en } from "@/i18n/en";
+import { getLocale } from "@/i18n/get-locale";
+import { getMessages } from "@/i18n/get-messages";
 
-export const metadata: Metadata = {
-  title: "Insights",
-  description: "Expert blog, reports, whitepapers, and webinars.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const m = getMessages(await getLocale());
+  return {
+    title: m.insightsPage.title,
+    description: m.insightsPage.intro,
+  };
+}
 
 type Props = { searchParams: Promise<{ type?: string }> };
 
@@ -17,17 +21,18 @@ export default async function InsightsPage({ searchParams }: Props) {
     ? (type as InsightType)
     : undefined;
   const items = filterInsights(filter);
+  const m = getMessages(await getLocale());
 
   return (
     <section className="section">
       <div className="container">
         <div className="section__head">
-          <p className="section__eyebrow">Content</p>
-          <h1>Insights</h1>
-          <p>Methodology-focused writing. No client logos or vanity case studies.</p>
+          <p className="section__eyebrow">{m.insightsPage.eyebrow}</p>
+          <h1>{m.insightsPage.title}</h1>
+          <p>{m.insightsPage.intro}</p>
         </div>
         {items.length === 0 ? (
-          <p>{en.emptyInsights}</p>
+          <p>{m.emptyInsights}</p>
         ) : (
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "1rem" }}>
             {items.map((item) => (

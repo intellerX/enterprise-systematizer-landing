@@ -1,28 +1,26 @@
-import { site } from "@/content/site";
-import styles from "./Problem.module.css";
+import type { LandingCopy } from "@/content/landing";
+import styles from "./landing.module.css";
 
-export function Problem() {
-  const { problem } = site;
+type Props = { copy: LandingCopy["problem"] };
+
+export function Problem({ copy }: Props) {
   return (
     <section className="section" aria-labelledby="problem-title">
       <div className="container">
         <div className="section__head">
-          <p className="section__eyebrow">Positioning</p>
-          <h2 id="problem-title">{problem.title}</h2>
+          <p className="section__eyebrow">{copy.eyebrow}</p>
+          <h2 id="problem-title">{copy.title}</h2>
         </div>
-        <div className="grid-2">
+        <div className={styles.split}>
           <article className={styles.card}>
-            <h3>{problem.cto.title}</h3>
-            <p className={styles.pain}>{problem.cto.pain}</p>
-            <p>{problem.cto.want}</p>
+            <h3>{copy.painTitle}</h3>
+            <p className={styles.pain}>{copy.pain}</p>
           </article>
           <article className={styles.card}>
-            <h3>{problem.cio.title}</h3>
-            <p className={styles.pain}>{problem.cio.pain}</p>
-            <p>{problem.cio.want}</p>
+            <h3>{copy.solutionTitle}</h3>
+            <p className={styles.pain}>{copy.solution}</p>
           </article>
         </div>
-        <p className={styles.positioning}>{problem.positioning}</p>
       </div>
     </section>
   );

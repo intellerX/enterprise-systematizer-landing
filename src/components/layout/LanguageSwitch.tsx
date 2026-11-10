@@ -1,0 +1,30 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useI18n } from "@/i18n/I18nProvider";
+import { LOCALE_COOKIE, type Locale } from "@/i18n/locale";
+import styles from "./SiteHeader.module.css";
+
+export function LanguageSwitch() {
+  const router = useRouter();
+  const { locale, m } = useI18n();
+
+  function choose(next: Locale) {
+    if (next === locale) return;
+    document.cookie = `${LOCALE_COOKIE}=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
+    router.refresh();
+  }
+
+  return (
+    <div className={styles.lang} role="group" aria-label={m.nav.language}>
+      <button type="button" aria-pressed={locale === "es"} onClick={() => choose("es")}>
+        <span aria-hidden="true">ES</span>
+        <span className="sr-only">Español</span>
+      </button>
+      <button type="button" aria-pressed={locale === "en"} onClick={() => choose("en")}>
+        <span aria-hidden="true">EN</span>
+        <span className="sr-only">English</span>
+      </button>
+    </div>
+  );
+}

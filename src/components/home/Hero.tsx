@@ -1,17 +1,32 @@
-import { site } from "@/content/site";
+import type { LandingCopy } from "@/content/landing";
 import { HeroCtas } from "./HeroCtas";
-import { HeroMedia } from "./HeroMedia";
-import styles from "./Hero.module.css";
+import styles from "./landing.module.css";
 
-export function Hero() {
-  const { hero } = site;
+type Props = { copy: LandingCopy["hero"] };
+
+export function Hero({ copy }: Props) {
   return (
-    <HeroMedia>
-      <h1 className={`${styles.brand} rise`} id="hero-brand">
-        {hero.headline}
-      </h1>
-      <p className={`${styles.sub} rise`}>{hero.subhead}</p>
-      <HeroCtas primary={hero.primaryCta} secondary={hero.secondaryCta} />
-    </HeroMedia>
+    <section className={styles.hero} aria-labelledby="hero-title">
+      <div className={`container ${styles.heroGrid}`}>
+        <div>
+          <p className="section__eyebrow">{copy.eyebrow}</p>
+          <h1 id="hero-title">{copy.headline}</h1>
+          <p className={styles.lead}>{copy.subhead}</p>
+          <p className={styles.motto}>{copy.motto}</p>
+          <HeroCtas primary={copy.primary} secondary={copy.secondary} />
+        </div>
+        <aside className={styles.panel} aria-label={copy.panelLabel}>
+          <p className={styles.kicker}>{copy.panelKicker}</p>
+          <ul className={styles.highlights}>
+            {copy.highlights.map((item) => (
+              <li key={item.title}>
+                <p className={styles.highlightTitle}>{item.title}</p>
+                <p>{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </section>
   );
 }

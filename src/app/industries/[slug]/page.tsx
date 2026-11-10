@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getIndustry, industries } from "@/content/industries";
+import { getLocale } from "@/i18n/get-locale";
+import { getMessages } from "@/i18n/get-messages";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -23,6 +25,7 @@ export default async function IndustryPage({ params }: Props) {
   const { slug } = await params;
   const industry = getIndustry(slug);
   if (!industry) notFound();
+  const m = getMessages(await getLocale());
 
   return (
     <article className="section">
@@ -40,7 +43,7 @@ export default async function IndustryPage({ params }: Props) {
         </ul>
         <p>
           <Link href="/contact" className="btn btn--primary">
-            Discuss your context
+            {m.servicePage.cta}
           </Link>
         </p>
       </div>

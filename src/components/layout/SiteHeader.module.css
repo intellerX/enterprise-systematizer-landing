@@ -3,7 +3,7 @@
   top: 0;
   z-index: 80;
   backdrop-filter: blur(16px) saturate(1.2);
-  background: rgba(11, 15, 20, 0.86);
+  background: rgba(7, 11, 24, 0.9);
   border-bottom: 1px solid var(--line);
   min-height: var(--header-h);
 }
@@ -37,7 +37,38 @@
   border-radius: 3px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   flex-shrink: 0;
-  box-shadow: 0 0 0 1px rgba(126, 200, 227, 0.25);
+  box-shadow: 0 0 0 1px rgba(185, 203, 255, 0.35);
+}
+
+.lang {
+  display: inline-flex;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(12, 18, 40, 0.8);
+}
+
+.lang button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.15rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lang button[aria-pressed="true"] {
+  background: #d7e3ff;
+  color: #0b1230;
+}
+
+.lang button:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: -2px;
 }
 
 .brandText {
@@ -135,10 +166,11 @@
   right: 0;
   top: var(--header-h);
   z-index: 2;
-  background: rgba(17, 24, 33, 0.98);
+  background: #070b18;
   border-bottom: 1px solid var(--line);
   padding: 1rem 1rem 1.25rem;
-  max-height: calc(100vh - var(--header-h));
+  min-height: calc(100dvh - var(--header-h));
+  max-height: calc(100dvh - var(--header-h));
   overflow: auto;
   box-shadow: var(--shadow);
 }
@@ -238,6 +270,20 @@
     display: none !important;
   }
 
+  .brand {
+    order: 1;
+  }
+
+  .nav {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .lang {
+    order: 3;
+    margin-left: 0.75rem;
+  }
+
   .nav {
     display: flex;
     align-items: center;
@@ -255,6 +301,7 @@
   .navOpen {
     display: flex;
     position: static;
+    min-height: 0;
     max-height: none;
     overflow: visible;
     background: transparent;

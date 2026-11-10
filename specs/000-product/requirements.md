@@ -2,6 +2,8 @@
 
 Derived from [`prompt.md`](../../prompt.md) + project constitution. Priority: **must** / **should** / **could**.
 
+**Home e idioma:** F10–F19 y el “inglés primero” de N5 quedan sustituidos por [`specs/002-factory-landing/requirements.md`](../002-factory-landing/requirements.md). Lo de abajo sigue vigente para contacto, leads, tema oscuro, a11y y rutas ya publicadas.
+
 ## Functional
 
 ### Site shell & IA

@@ -1,46 +1,39 @@
 import Link from "next/link";
-import { navigation } from "@/content/navigation";
+import { getNavigation } from "@/content/navigation";
 import { site } from "@/content/site";
-import { en } from "@/i18n/en";
+import { getLocale } from "@/i18n/get-locale";
+import { getMessages } from "@/i18n/get-messages";
 import { CookiePrefsButton } from "./CookieBanner";
 import styles from "./SiteFooter.module.css";
 
-const legal = [
-  { href: "/legal/privacy", label: "Privacy" },
-  { href: "/legal/terms", label: "Terms" },
-  { href: "/legal/cookies", label: "Cookies" },
-  { href: "/legal/impressum", label: "Impressum" },
-];
+export async function SiteFooter() {
+  const locale = await getLocale();
+  const m = getMessages(locale);
+  const navigation = getNavigation(locale);
 
-export function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.grid}`}>
         <div>
           <p className={styles.brand}>{site.brand}</p>
-          <p className={styles.tag}>{site.tagline}</p>
+          <p className={styles.tag}>{m.footer.tagline}</p>
         </div>
         <div>
-          <h2 className={styles.heading}>{en.footer.sitemap}</h2>
+          <h2 className={styles.heading}>{m.footer.sitemap}</h2>
           <ul className={styles.list}>
-            {navigation.map((g) => (
-              <li key={g.id}>
-                <Link href={g.href ?? g.children?.[0]?.href ?? "/"}>
-                  {g.label}
-                </Link>
+            {navigation.map((item) => (
+              <li key={item.id}>
+                <Link href={item.href}>{item.label}</Link>
               </li>
             ))}
-            <li>
-              <Link href="/assessment">AI Maturity Assessment</Link>
-            </li>
           </ul>
         </div>
         <div>
-          <h2 className={styles.heading}>{en.footer.legal}</h2>
+          <h2 className={styles.heading}>{m.footer.legal}</h2>
           <ul className={styles.list}>
-            {legal.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href}>{l.label}</Link>
+            {m.footer.legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
             <li>
@@ -50,7 +43,9 @@ export function SiteFooter() {
         </div>
       </div>
       <div className={`container ${styles.copy}`}>
-        <p>© {new Date().getFullYear()} {site.brand}. All rights reserved.</p>
+        <p>
+          © {new Date().getFullYear()} {site.brand}. {m.footer.rights}
+        </p>
       </div>
     </footer>
   );

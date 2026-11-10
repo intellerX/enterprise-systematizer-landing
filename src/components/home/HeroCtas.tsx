@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { track } from "@/lib/analytics/track";
-import styles from "./Hero.module.css";
+import styles from "./landing.module.css";
 
 type Cta = { label: string; href: string };
 

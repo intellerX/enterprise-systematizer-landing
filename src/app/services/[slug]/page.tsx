@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/content/services";
 import { site } from "@/content/site";
+import { getLocale } from "@/i18n/get-locale";
+import { getMessages } from "@/i18n/get-messages";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,6 +27,7 @@ export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
   const service = getService(slug);
   if (!service) notFound();
+  const m = getMessages(await getLocale());
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -41,7 +44,7 @@ export default async function ServicePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="container" style={{ maxWidth: "48rem" }}>
-        <p className="section__eyebrow">Service</p>
+        <p className="section__eyebrow">{m.servicePage.eyebrow}</p>
         <h1>{service.title}</h1>
         <p style={{ color: "var(--text)", fontSize: "1.1rem" }}>
           {service.summary}
@@ -51,7 +54,7 @@ export default async function ServicePage({ params }: Props) {
         ))}
         <p>
           <Link href="/contact" className="btn btn--primary">
-            Request a consultation
+            {m.servicePage.cta}
           </Link>
         </p>
       </div>
