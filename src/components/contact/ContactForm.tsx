@@ -1,15 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { site } from "@/content/site";
-import { en } from "@/i18n/en";
+import { useI18n } from "@/i18n/I18nProvider";
 import { track } from "@/lib/analytics/track";
-import {
-  contactFormSchema,
-  MAX_FILES,
-  validateFiles,
-} from "@/lib/validation/contact";
+import { contactChannel } from "@/lib/contact-channel";
+import { contactFormSchema, validateFiles } from "@/lib/validation/contact";
 import styles from "./ContactForm.module.css";
 
 type Props = {
@@ -18,13 +15,17 @@ type Props = {
 };
 
 export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
+  const { m } = useI18n();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
   const [formError, setFormError] = useState<string | null>(null);
 
-  const interests = useMemo(() => site.contact.interests, []);
+  function messageFor(key: string, fallback: string) {
+    const known = m.form.errors[key as keyof typeof m.form.errors];
+    return known ?? fallback;
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +38,11 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
     const files = (fd.getAll("files") as File[]).filter((f) => f && f.size > 0);
     const fileError = validateFiles(files);
     if (fileError) {
-      setErrors({ files: fileError });
+      setErrors({
+        files: fileError.includes("5 MB")
+          ? m.form.errors.fileSize
+          : m.form.errors.fileCount,
+      });
       setStatus("error");
       return;
     }
@@ -59,45 +64,55 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
       const next: Record<string, string> = {};
       for (const issue of parsed.error.issues) {
         const key = String(issue.path[0] ?? "form");
-        next[key] = issue.message;
+        next[key] = messageFor(key, issue.message);
       }
       setErrors(next);
       setStatus("error");
       return;
     }
 
-    // Rebuild FormData with normalized values
-    const body = new FormData();
-    Object.entries(parsed.data).forEach(([k, v]) => {
-      if (v === undefined || v === false) return;
-      body.append(k, String(v));
-    });
-    files.slice(0, MAX_FILES).forEach((f) => body.append("files", f));
+    const text = [
+      `${m.form.fullName}: ${parsed.data.fullName}`,
+      `${m.form.businessEmail}: ${parsed.data.businessEmail}`,
+      `${m.form.phone}: ${parsed.data.phone || "-"}`,
+      `${m.form.company}: ${parsed.data.company || "-"}`,
+      `${m.form.role}: ${parsed.data.role || "-"}`,
+      `${m.form.interest}: ${m.form.interestLabels[parsed.data.interest]}`,
+      "",
+      parsed.data.message,
+      parsed.data.assessmentSummary ? `\n${parsed.data.assessmentSummary}` : "",
+    ].join("\n");
 
-    try {
-      const res = await fetch("/api/contact", { method: "POST", body });
-      const json = (await res.json()) as { ok?: boolean; error?: string };
-      if (!res.ok || !json.ok) {
-        setFormError(json.error || en.form.error);
-        setStatus("error");
-        return;
-      }
-      track("form_submit", { interest: parsed.data.interest });
-      setStatus("success");
-      form.reset();
-    } catch {
-      setFormError(en.form.error);
-      setStatus("error");
+    const channel = contactChannel();
+    track("form_submit", { interest: parsed.data.interest });
+
+    if (channel.action) {
+      form.action = channel.action;
+      form.method = "post";
+      form.enctype = "multipart/form-data";
+      form.submit();
+      return;
     }
+
+    if (channel.whatsapp) {
+      window.location.href = `https://wa.me/${channel.whatsapp}?text=${encodeURIComponent(text)}`;
+    } else {
+      const subject = encodeURIComponent("intellerX");
+      const body = encodeURIComponent(text);
+      window.location.href = `mailto:${channel.email}?subject=${subject}&body=${body}`;
+    }
+
+    setStatus("success");
+    form.reset();
   }
 
   if (status === "success") {
     return (
       <div className={styles.success} role="status">
-        <h3>{en.form.success}</h3>
-        <p>We will respond within two business days.</p>
+        <h3>{m.form.success}</h3>
+        <p>{m.form.successDetail}</p>
         <Link href="/" className="btn btn--ghost">
-          Back to home
+          {m.form.backHome}
         </Link>
       </div>
     );
@@ -106,17 +121,12 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
       <div className={styles.row}>
-        <Field
-          id="fullName"
-          label="Full name"
-          required
-          error={errors.fullName}
-        >
+        <Field id="fullName" label={m.form.fullName} required error={errors.fullName}>
           <input id="fullName" name="fullName" autoComplete="name" required />
         </Field>
         <Field
           id="businessEmail"
-          label="Business email"
+          label={m.form.businessEmail}
           required
           error={errors.businessEmail}
         >
@@ -130,31 +140,31 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
         </Field>
       </div>
       <div className={styles.row}>
-        <Field id="phone" label="Phone" error={errors.phone}>
+        <Field id="phone" label={m.form.phone} error={errors.phone}>
           <input id="phone" name="phone" type="tel" autoComplete="tel" />
         </Field>
-        <Field id="company" label="Company" error={errors.company}>
+        <Field id="company" label={m.form.company} error={errors.company}>
           <input id="company" name="company" autoComplete="organization" />
         </Field>
       </div>
       <div className={styles.row}>
-        <Field id="role" label="Role" error={errors.role}>
+        <Field id="role" label={m.form.role} error={errors.role}>
           <input id="role" name="role" autoComplete="organization-title" />
         </Field>
-        <Field id="interest" label="Interest" required error={errors.interest}>
+        <Field id="interest" label={m.form.interest} required error={errors.interest}>
           <select id="interest" name="interest" required defaultValue="">
             <option value="" disabled>
-              Select…
+              {m.form.interestPlaceholder}
             </option>
-            {interests.map((i) => (
-              <option key={i} value={i}>
-                {i}
+            {site.contact.interests.map((value) => (
+              <option key={value} value={value}>
+                {m.form.interestLabels[value]}
               </option>
             ))}
           </select>
         </Field>
       </div>
-      <Field id="message" label="Message" required error={errors.message}>
+      <Field id="message" label={m.form.message} required error={errors.message}>
         <textarea
           id="message"
           name="message"
@@ -163,11 +173,10 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
           defaultValue={initialMessage}
         />
       </Field>
-      <Field id="files" label="Attachments (up to 3, ≤ 5 MB total)" error={errors.files}>
+      <Field id="files" label={m.form.files} error={errors.files}>
         <input id="files" name="files" type="file" multiple />
       </Field>
 
-      {/* Honeypot */}
       <div className={styles.hp} aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
@@ -176,9 +185,8 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
       <div className={styles.consent}>
         <input id="consent" name="consent" type="checkbox" required />
         <label htmlFor="consent">
-          I agree to the{" "}
-          <Link href="/legal/terms">Terms</Link> and{" "}
-          <Link href="/legal/privacy">Privacy</Link> notice.
+          {m.form.consentBefore} <Link href="/legal/terms">{m.form.terms}</Link>{" "}
+          {m.form.consentAnd} <Link href="/legal/privacy">{m.form.privacy}</Link>.
         </label>
       </div>
       {errors.consent ? <p className={styles.error}>{errors.consent}</p> : null}
@@ -194,9 +202,10 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
         className="btn btn--primary"
         disabled={status === "loading"}
       >
-        {status === "loading" ? "Sending…" : en.form.submit}
+        {status === "loading" ? m.form.sending : m.form.submit}
       </button>
-      <p className={styles.note}>{site.contact.intro}</p>
+      <p className={styles.note}>{m.form.note}</p>
+      <p className={styles.note}>{m.form.staticHint}</p>
     </form>
   );
 }

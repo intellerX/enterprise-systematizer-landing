@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Manrope, Outfit } from "next/font/google";
 import { AppShell } from "@/components/layout/AppShell";
 import { site } from "@/content/site";
+import { getLanding } from "@/content/landing";
 import "./globals.css";
 
-const display = Fraunces({
+const display = Outfit({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["600", "700"],
+  weight: ["500", "600", "700"],
 });
 
 const body = Manrope({
@@ -16,18 +17,21 @@ const body = Manrope({
   weight: ["400", "500", "600", "700"],
 });
 
+const copy = getLanding("es");
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: site.brand,
+    default: copy.meta.title,
     template: `%s · ${site.brand}`,
   },
-  description: site.description,
+  description: copy.meta.description,
   openGraph: {
-    title: site.brand,
-    description: site.description,
+    title: copy.meta.title,
+    description: copy.meta.description,
     type: "website",
     url: site.url,
+    locale: "es_419",
   },
   robots: { index: true, follow: true },
 };
@@ -42,11 +46,11 @@ export default function RootLayout({
     "@type": "Organization",
     name: site.brand,
     url: site.url,
-    description: site.description,
+    description: copy.meta.description,
   };
 
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="es" className={`${display.variable} ${body.variable}`}>
       <body>
         <script
           type="application/ld+json"

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { insights } from "@/content/insights";
-import { en } from "@/i18n/en";
+import { es } from "@/i18n/es";
 import styles from "./Insights.module.css";
 
 export function InsightsTeaser() {
@@ -12,7 +12,7 @@ export function InsightsTeaser() {
           <h2 id="insights-title">Insights</h2>
         </div>
         {insights.length === 0 ? (
-          <p className={styles.empty}>{en.emptyInsights}</p>
+          <p className={styles.empty}>{es.emptyInsights}</p>
         ) : (
           <ul className={styles.grid}>
             {insights.map((item) => (

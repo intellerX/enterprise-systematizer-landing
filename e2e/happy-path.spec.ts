@@ -1,21 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-test("hero → assessment → contact happy path", async ({ page }) => {
-  await page.goto("/");
+test("el hero lleva al contacto", async ({ page }) => {
+  await page.goto("/enterprise-systematizer-landing/");
   await expect(
-    page.getByRole("heading", { name: /Pragmatic AI Software Engineering/i }),
+    page.getByRole("heading", { level: 1, name: /Le falta una fábrica/i }),
   ).toBeVisible();
 
-  await page.getByRole("link", { name: /Assess your AI maturity/i }).click();
-  await expect(page.getByRole("heading", { name: /AI Maturity Assessment/i })).toBeVisible();
+  await page.getByRole("link", { name: /Quiero hablar con el equipo/i }).click();
+  await expect(page.getByRole("heading", { name: /Conversemos/i })).toBeVisible();
+  await expect(page.getByLabel(/Nombre completo/i)).toBeVisible();
+});
 
-  for (let i = 0; i < 15; i++) {
-    await page.getByRole("radio").first().click();
-    const next = page.getByRole("button", { name: /Next|See results/i });
-    await next.click();
-  }
-
-  await expect(page.getByText(/Your maturity:/i)).toBeVisible();
-  await page.getByRole("link", { name: /Continue to contact/i }).click();
-  await expect(page.getByRole("heading", { name: /Request a consultation/i })).toBeVisible();
+test("el diagrama de la fábrica se amplía y el paso se puede elegir", async ({ page }) => {
+  await page.goto("/enterprise-systematizer-landing/");
+  await expect(page.getByRole("img", { name: /Bucle de Auto-Mejora/i })).toBeVisible();
+  await page.getByRole("button", { name: /Bucle de Auto-Mejora/i }).click();
+  await expect(page.getByRole("dialog", { name: "Fábrica de Software" })).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar" }).click();
+  await page.getByRole("button", { name: /QA calidad/i }).click();
+  await expect(page.getByRole("heading", { level: 3, name: "QA calidad" })).toBeVisible();
 });

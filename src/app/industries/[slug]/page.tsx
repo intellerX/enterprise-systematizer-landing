@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getIndustry, industries } from "@/content/industries";
+import { ServiceCta } from "@/components/i18n/ServiceBits";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return industries.map((i) => ({ slug: i.slug }));
@@ -39,9 +41,7 @@ export default async function IndustryPage({ params }: Props) {
           ))}
         </ul>
         <p>
-          <Link href="/contact" className="btn btn--primary">
-            Discuss your context
-          </Link>
+          <ServiceCta />
         </p>
       </div>
     </article>

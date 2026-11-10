@@ -4,6 +4,8 @@ import { insights } from "@/content/insights";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
   const staticRoutes = [

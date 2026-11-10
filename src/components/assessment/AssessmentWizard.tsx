@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { assessmentQuestions, pillars } from "@/content/assessment";
 import { methodology } from "@/content/methodology";
-import { en } from "@/i18n/en";
+import { useI18n } from "@/i18n/I18nProvider";
 import { track } from "@/lib/analytics/track";
 import {
   scoreAssessment,
@@ -30,6 +30,7 @@ function readStoredAnswers(): Answers {
 }
 
 export function AssessmentWizard() {
+  const { m } = useI18n();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [hydrated, setHydrated] = useState(false);
@@ -111,7 +112,7 @@ export function AssessmentWizard() {
             className="btn btn--ghost"
             onClick={() => window.print()}
           >
-            {en.assessment.print}
+            {m.assessment.print}
           </button>
           <label className={styles.check}>
             <input
@@ -119,10 +120,10 @@ export function AssessmentWizard() {
               checked={prefill}
               onChange={(e) => setPrefill(e.target.checked)}
             />
-            {en.assessment.prefillConsent}
+            {m.assessment.prefillConsent}
           </label>
           <Link href={contactHref} className="btn btn--primary">
-            {en.assessment.goContact}
+            {m.assessment.goContact}
           </Link>
         </div>
       </div>
@@ -163,7 +164,7 @@ export function AssessmentWizard() {
           disabled={step === 0}
           onClick={() => setStep((s) => Math.max(0, s - 1))}
         >
-          {en.assessment.back}
+          {m.assessment.back}
         </button>
         {step < total - 1 ? (
           <button
@@ -172,7 +173,7 @@ export function AssessmentWizard() {
             disabled={!answers[question.id]}
             onClick={() => setStep((s) => s + 1)}
           >
-            {en.assessment.next}
+            {m.assessment.next}
           </button>
         ) : (
           <button
@@ -181,7 +182,7 @@ export function AssessmentWizard() {
             disabled={!answers[question.id]}
             onClick={finish}
           >
-            {en.assessment.seeResults}
+            {m.assessment.seeResults}
           </button>
         )}
       </div>

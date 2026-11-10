@@ -5,6 +5,8 @@ import { site } from "@/content/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return insights.map((i) => ({ slug: i.slug }));
 }

@@ -4,15 +4,13 @@ Source brief: [`prompt.md`](../../prompt.md). Adapted into this repo’s SDD lay
 
 ## Problem
 
-Enterprises have adopted AI tools, but delivery metrics have not moved. AI remains disconnected from the real codebase, cloud, data, and security infrastructure. Buyers (CTO / CIO) need a clear partner who measures results on their stack before scaling—not hype, logos, or company-history claims.
+La landing tiene que vender la fábrica de software de intellerX. El relato vigente (partner de “ingeniería pragmática”, en inglés, orientado a métricas de delivery) no engancha. El pedido nuevo está en [`specs/002-factory-landing/`](../002-factory-landing/overview.md) y manda sobre la home y el idioma.
 
 ## Goals
 
-- Ship a **dark-mode-only** marketing landing app for a Pragmatic AI Software Engineering partner.
-- Communicate fast: **what we do**, **how we do it** (phased methodology with exits), **why AI agents**.
-- Convert visitors via contact / consultation and an interactive **AI Maturity Assessment**.
-- Deliver new-client landing submissions to a **server-only** inbox (never shown on the page).
-- Keep all marketing content in typed, editable content files (CMS-ready schema).
+- Landing oscura que vende la fábrica de software potenciada por AI, en español por defecto, con inglés sincronizado.
+- Convertir por contacto. El correo del lead sigue siendo solo de servidor.
+- Mantener el contenido de marketing en módulos tipados.
 
 ## Non-goals
 
@@ -20,7 +18,7 @@ Enterprises have adopted AI tools, but delivery metrics have not moved. AI remai
 - Full product app, auth, billing, or CRM UI.
 - Light theme or theme toggle (v1 is dark-only; non-negotiable).
 - Exposing the lead destination email (or any operator inbox) in UI, HTML, or client bundles.
-- Multi-language UI in v1 (English first; strings externalized for later Spanish).
+- Un solo idioma. Español es el default; inglés queda disponible (`specs/002-factory-landing`).
 - Backend-persisted assessment accounts (v1 is client-side; API contract designed for later).
 
 ## Users
@@ -41,7 +39,7 @@ Enterprises have adopted AI tools, but delivery metrics have not moved. AI remai
 
 | Topic | Decision | Notes |
 | ----- | -------- | ----- |
-| Display brand | “Pragmatic AI Software Engineering” as hero-level brand signal | Legal entity name TBD if needed for Impressum |
+| Display brand | intellerX, fábrica de software potenciada por AI | Razón social del Impressum sigue TBD |
 | Theme | **Dark mode only** | User non-negotiable; no light theme in v1 |
 | Lead email | Destination `anmevel10@gmail.com` via server env only | Must never appear in page UI or client-visible source |
 | Stack | React + TypeScript (Next.js App Router) | Per `react-responsive` + prompt default when no app exists yet |
@@ -50,6 +48,6 @@ Enterprises have adopted AI tools, but delivery metrics have not moved. AI remai
 
 ## Status
 
-- **Phase:** in-progress (implementation on `feature/complete-landing`)
+- **Phase:** in-progress (home e idioma: `specs/002-factory-landing`)
 - **Owner:** TBD
 - **Related:** `prompt.md`; skill `spec-driven-design`; skill `react-responsive`

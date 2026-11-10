@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { en } from "@/i18n/en";
+import { useEffect, useSyncExternalStore } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 import { readConsent, writeConsent } from "@/lib/consent/storage";
 import styles from "./CookieBanner.module.css";
 
@@ -32,14 +32,21 @@ export function CookieBanner() {
     getServerSnapshot,
   );
 
+  const { m } = useI18n();
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("cookie-open", visible);
+    return () => document.documentElement.classList.remove("cookie-open");
+  }, [visible]);
+
   if (!visible) return null;
 
   return (
-    <div className={styles.banner} role="dialog" aria-label={en.cookie.title}>
+    <div className={styles.banner} role="dialog" aria-label={m.cookie.title}>
       <div className={`container ${styles.inner}`}>
         <div>
-          <strong>{en.cookie.title}</strong>
-          <p>{en.cookie.body}</p>
+          <strong>{m.cookie.title}</strong>
+          <p>{m.cookie.body}</p>
         </div>
         <div className={styles.actions}>
           <button
@@ -50,7 +57,7 @@ export function CookieBanner() {
               writeConsent(false);
             }}
           >
-            {en.cookie.reject}
+            {m.cookie.reject}
           </button>
           <button
             type="button"
@@ -60,7 +67,7 @@ export function CookieBanner() {
               writeConsent(true);
             }}
           >
-            {en.cookie.accept}
+            {m.cookie.accept}
           </button>
         </div>
       </div>
@@ -69,6 +76,7 @@ export function CookieBanner() {
 }
 
 export function CookiePrefsButton() {
+  const { m } = useI18n();
   return (
     <button
       type="button"
@@ -77,7 +85,7 @@ export function CookiePrefsButton() {
         window.dispatchEvent(new Event("paise-open-cookies"));
       }}
     >
-      {en.cookie.manage}
+      {m.cookie.manage}
     </button>
   );
 }

@@ -1,33 +1,45 @@
-import { AgentsSection } from "@/components/home/Agents";
+"use client";
+
+import { Cases } from "@/components/home/Cases";
+import { Benefits } from "@/components/home/Benefits";
+import { FactoryFlow } from "@/components/home/FactoryFlow";
 import { Hero } from "@/components/home/Hero";
-import { IndustriesPanel } from "@/components/home/Industries";
-import { InsightsTeaser } from "@/components/home/Insights";
-import { Metrics } from "@/components/home/Metrics";
-import { MethodologyStepper } from "@/components/home/Methodology";
-import { Practices } from "@/components/home/Practices";
 import { Problem } from "@/components/home/Problem";
-import { ServicesTeaser } from "@/components/home/Services";
+import { SelfImprove } from "@/components/home/SelfImprove";
+import { Team } from "@/components/home/Team";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { site } from "@/content/site";
+import { getLanding } from "@/content/landing";
+import { useI18n } from "@/i18n/I18nProvider";
+import styles from "@/components/home/landing.module.css";
 
 export default function HomePage() {
+  const { locale } = useI18n();
+  const copy = getLanding(locale);
+
   return (
     <>
-      <Hero />
-      <Problem />
-      <MethodologyStepper />
-      <Metrics />
-      <AgentsSection />
-      <ServicesTeaser />
-      <IndustriesPanel />
-      <Practices />
-      <InsightsTeaser />
-      <section className="section" id="contact" aria-labelledby="home-contact">
+      <Hero copy={copy.hero} />
+      <Problem copy={copy.problem} />
+      <Benefits copy={copy.benefits} />
+      <FactoryFlow copy={copy.process} locale={locale} />
+      <SelfImprove copy={copy.improve} />
+      <Team copy={copy.team} />
+      <Cases copy={copy.cases} />
+      <div className={`container ${styles.band}`}>
+        <div className={styles.bandInner}>
+          <h2>{copy.closing.title}</h2>
+          <p>{copy.closing.body}</p>
+          <a className="btn btn--primary" href="#contacto">
+            {copy.closing.cta}
+          </a>
+        </div>
+      </div>
+      <section className="section" id="contacto" aria-labelledby="home-contact">
         <div className="container">
           <div className="section__head">
-            <p className="section__eyebrow">Contact</p>
-            <h2 id="home-contact">{site.contact.title}</h2>
-            <p>{site.contact.intro}</p>
+            <p className="section__eyebrow">{copy.contact.eyebrow}</p>
+            <h2 id="home-contact">{copy.contact.title}</h2>
+            <p>{copy.contact.intro}</p>
           </div>
           <ContactForm />
         </div>

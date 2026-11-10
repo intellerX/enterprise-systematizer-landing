@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/content/services";
 import { site } from "@/content/site";
+import { ServiceCta, ServiceEyebrow } from "@/components/i18n/ServiceBits";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -41,7 +43,7 @@ export default async function ServicePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="container" style={{ maxWidth: "48rem" }}>
-        <p className="section__eyebrow">Service</p>
+        <ServiceEyebrow />
         <h1>{service.title}</h1>
         <p style={{ color: "var(--text)", fontSize: "1.1rem" }}>
           {service.summary}
@@ -50,9 +52,7 @@ export default async function ServicePage({ params }: Props) {
           <p key={p}>{p}</p>
         ))}
         <p>
-          <Link href="/contact" className="btn btn--primary">
-            Request a consultation
-          </Link>
+          <ServiceCta />
         </p>
       </div>
     </article>

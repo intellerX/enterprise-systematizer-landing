@@ -8,7 +8,8 @@ Bootstrap + naming + GitHub conventions: [`../PROJECT_INIT.md`](../PROJECT_INIT.
 
 | Path | Purpose |
 | ---- | ------- |
-| `000-product/` | Living product context |
+| `000-product/` | Living product context. Home and language follow `002-factory-landing/` |
+| `002-factory-landing/` | intellerX factory landing (Spanish default, English in sync) |
 | `NNN-feature-name/` | Spec for one feature or change |
 | `.cursor/skills/spec-driven-design/` | Agent skill + blank templates |
 

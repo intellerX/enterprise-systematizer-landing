@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
 import { AssessmentWizard } from "@/components/assessment/AssessmentWizard";
-import { en } from "@/i18n/en";
+import { AssessmentIntro } from "@/components/i18n/ServiceBits";
+import { getMessages } from "@/i18n/get-messages";
+
+const m = getMessages("es");
 
 export const metadata: Metadata = {
-  title: "AI Maturity Assessment",
-  description: en.assessment.intro,
+  title: m.assessment.title,
+  description: m.assessment.intro,
 };
 
 export default function AssessmentPage() {
   return (
     <section className="section">
       <div className="container">
-        <div className="section__head">
-          <p className="section__eyebrow">Self-service</p>
-          <h1>{en.assessment.title}</h1>
-          <p>{en.assessment.intro}</p>
-        </div>
+        <AssessmentIntro />
         <AssessmentWizard />
       </div>
     </section>
