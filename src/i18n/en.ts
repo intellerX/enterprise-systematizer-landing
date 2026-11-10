@@ -31,8 +31,9 @@ export const en = {
   form: {
     submit: "Send request",
     sending: "Sending…",
-    success: "Thank you. Your request was received.",
-    successDetail: "We will respond within two business days.",
+    success: "Done. Your message is ready.",
+    successDetail:
+      "Your mail app or the configured channel opened with the text filled in. This static site does not store it on a server.",
     backHome: "Back to home",
     error: "Something went wrong. Please check the form and try again.",
     fullName: "Full name",
@@ -49,6 +50,8 @@ export const en = {
     consentAnd: "and",
     privacy: "Privacy",
     note: "Tell us what you want to change. We reply within two business days. Your data is handled according to our privacy notice.",
+    staticHint:
+      "Sending opens your mail app with the message filled in. Attachments are not included. If an external form or WhatsApp is configured for the build, that channel is used instead.",
     errors: {
       fullName: "Enter your full name.",
       businessEmail: "Enter a valid business email.",

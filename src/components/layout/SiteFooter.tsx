@@ -1,14 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { getNavigation } from "@/content/navigation";
 import { site } from "@/content/site";
-import { getLocale } from "@/i18n/get-locale";
-import { getMessages } from "@/i18n/get-messages";
+import { useI18n } from "@/i18n/I18nProvider";
 import { CookiePrefsButton } from "./CookieBanner";
 import styles from "./SiteFooter.module.css";
 
-export async function SiteFooter() {
-  const locale = await getLocale();
-  const m = getMessages(locale);
+export function SiteFooter() {
+  const { locale, m } = useI18n();
   const navigation = getNavigation(locale);
 
   return (

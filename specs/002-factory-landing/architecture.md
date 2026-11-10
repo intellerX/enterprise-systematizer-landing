@@ -13,7 +13,7 @@ Visitante
       → AppShell + mensajes
       → Home (getLanding)
           → FactoryFlow (paso activo)
-          → ContactForm → POST /api/contact (enum de interés sin cambios)
+          → ContactForm → mailto / WhatsApp / formulario externo (sin API; GitHub Pages)
 ```
 
 ## Components

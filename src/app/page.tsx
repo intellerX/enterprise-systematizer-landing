@@ -1,3 +1,5 @@
+"use client";
+
 import { Cases } from "@/components/home/Cases";
 import { Benefits } from "@/components/home/Benefits";
 import { FactoryFlow } from "@/components/home/FactoryFlow";
@@ -7,11 +9,11 @@ import { SelfImprove } from "@/components/home/SelfImprove";
 import { Team } from "@/components/home/Team";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { getLanding } from "@/content/landing";
-import { getLocale } from "@/i18n/get-locale";
+import { useI18n } from "@/i18n/I18nProvider";
 import styles from "@/components/home/landing.module.css";
 
-export default async function HomePage() {
-  const locale = await getLocale();
+export default function HomePage() {
+  const { locale } = useI18n();
   const copy = getLanding(locale);
 
   return (

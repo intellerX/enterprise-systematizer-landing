@@ -31,8 +31,9 @@ export const es = {
   form: {
     submit: "Enviar",
     sending: "Enviando…",
-    success: "Gracias. Recibimos tu mensaje.",
-    successDetail: "Te respondemos en un plazo de dos días hábiles.",
+    success: "Listo. Tu mensaje quedó armado.",
+    successDetail:
+      "Se abrió tu correo o el canal configurado con el texto escrito. Este sitio estático no lo guarda en un servidor.",
     backHome: "Volver al inicio",
     error: "No se pudo enviar. Revisa el formulario e inténtalo de nuevo.",
     fullName: "Nombre completo",
@@ -49,6 +50,8 @@ export const es = {
     consentAnd: "y el aviso de",
     privacy: "Privacidad",
     note: "Cuéntanos el cambio que buscas. Respondemos en dos días hábiles. Tus datos se tratan según el aviso de privacidad.",
+    staticHint:
+      "Al enviar se abre tu correo con el mensaje armado. Los adjuntos no se incluyen. Si el proyecto configura un formulario externo o WhatsApp, se usa ese canal.",
     errors: {
       fullName: "Escribe tu nombre completo.",
       businessEmail: "Escribe un correo de trabajo válido.",

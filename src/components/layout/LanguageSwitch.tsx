@@ -1,18 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useI18n } from "@/i18n/I18nProvider";
-import { LOCALE_COOKIE, type Locale } from "@/i18n/locale";
+import type { Locale } from "@/i18n/locale";
 import styles from "./SiteHeader.module.css";
 
 export function LanguageSwitch() {
-  const router = useRouter();
-  const { locale, m } = useI18n();
+  const { locale, m, setLocale } = useI18n();
 
   function choose(next: Locale) {
     if (next === locale) return;
-    document.cookie = `${LOCALE_COOKIE}=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
-    router.refresh();
+    setLocale(next);
   }
 
   return (

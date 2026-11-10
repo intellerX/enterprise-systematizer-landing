@@ -3,6 +3,7 @@
 import { useId, useRef, useState } from "react";
 import type { LandingCopy } from "@/content/landing";
 import type { Locale } from "@/i18n/locale";
+import { basePath } from "@/lib/base-path";
 import styles from "./landing.module.css";
 
 type Props = {
@@ -11,8 +12,8 @@ type Props = {
 };
 
 const diagrams = {
-  es: { src: "/media/fabrica-es.webp", width: 2048, height: 768 },
-  en: { src: "/media/fabrica-en.webp", width: 2048, height: 768 },
+  es: { src: `${basePath}/media/fabrica-es.webp`, width: 2048, height: 768 },
+  en: { src: `${basePath}/media/fabrica-en.webp`, width: 2048, height: 768 },
 } as const;
 
 export function FactoryFlow({ copy, locale }: Props) {

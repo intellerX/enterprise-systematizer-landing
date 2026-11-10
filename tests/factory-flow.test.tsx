@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { FactoryFlow } from "@/components/home/FactoryFlow";
 import { getLanding } from "@/content/landing";
+import { basePath } from "@/lib/base-path";
 
 afterEach(() => {
   cleanup();
@@ -14,7 +15,7 @@ describe("FactoryFlow", () => {
     const user = userEvent.setup();
     render(<FactoryFlow copy={getLanding("es").process} locale="es" />);
     const diagram = screen.getByRole("img", { name: /Bucle de Auto-Mejora/i });
-    expect(diagram).toHaveAttribute("src", "/media/fabrica-es.webp");
+    expect(diagram).toHaveAttribute("src", `${basePath}/media/fabrica-es.webp`);
     await user.click(diagram);
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(screen.getByRole("heading", { name: "Fábrica de Software" })).toBeVisible();

@@ -1,36 +1,19 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactScreen } from "@/components/contact/ContactScreen";
 import { getLanding } from "@/content/landing";
-import { getLocale } from "@/i18n/get-locale";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const copy = getLanding(await getLocale());
-  return {
-    title: copy.contact.title,
-    description: copy.contact.intro,
-  };
-}
+const copy = getLanding("es");
 
-type Props = {
-  searchParams: Promise<{ message?: string; assessment?: string }>;
+export const metadata: Metadata = {
+  title: copy.contact.title,
+  description: copy.contact.intro,
 };
 
-export default async function ContactPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const copy = getLanding(await getLocale());
+export default function ContactPage() {
   return (
-    <section className="section" id="contacto">
-      <div className="container">
-        <div className="section__head">
-          <p className="section__eyebrow">{copy.contact.eyebrow}</p>
-          <h1>{copy.contact.title}</h1>
-          <p>{copy.contact.intro}</p>
-        </div>
-        <ContactForm
-          initialMessage={params.message ?? ""}
-          assessmentSummary={params.assessment ? params.message : undefined}
-        />
-      </div>
-    </section>
+    <Suspense fallback={null}>
+      <ContactScreen />
+    </Suspense>
   );
 }

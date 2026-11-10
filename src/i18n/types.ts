@@ -48,6 +48,7 @@ export type Messages = {
     consentAnd: string;
     privacy: string;
     note: string;
+    staticHint: string;
     errors: {
       fullName: string;
       businessEmail: string;

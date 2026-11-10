@@ -1,6 +1,6 @@
-import { getLocale } from "@/i18n/get-locale";
-import { getMessages } from "@/i18n/get-messages";
-import { I18nProvider } from "@/i18n/I18nProvider";
+"use client";
+
+import { useI18n, I18nProvider } from "@/i18n/I18nProvider";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
 import { CookieBanner } from "./CookieBanner";
@@ -9,19 +9,23 @@ type Props = {
   children: React.ReactNode;
 };
 
-export async function AppShell({ children }: Props) {
-  const locale = await getLocale();
-  const messages = getMessages(locale);
-
+export function AppShell({ children }: Props) {
   return (
-    <I18nProvider locale={locale} messages={messages}>
-      <a className="skip-link" href="#main">
-        {messages.skip}
-      </a>
+    <I18nProvider>
+      <SkipLink />
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />
       <CookieBanner />
     </I18nProvider>
+  );
+}
+
+function SkipLink() {
+  const { m } = useI18n();
+  return (
+    <a className="skip-link" href="#main">
+      {m.skip}
+    </a>
   );
 }

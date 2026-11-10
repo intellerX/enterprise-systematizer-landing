@@ -13,7 +13,8 @@ La home de `specs/000-product` (F10–F19) queda reemplazada por esta lista. Con
 | L5 | Equipo: expertos en ingeniería, Arquitectos AI y AI Seniors; acompañan un camino de cambio constante | must | Visible en la home |
 | L6 | Casos por sector: Educación, Trading, Certificaciones, Inventario, Taxes en EE.UU., Optimización de cálculos empresariales, Dashboards de reportes. Además, alcance en Estados Unidos, India y México: costos operativos, gasto en la nube y dependencias o librerías de más | must | Texto cualitativo; sin cifras ni nombres de clientes |
 | L7 | Español por defecto. Control ES/EN que persiste y vuelve a pintar la home y el cromo (nav, formulario, cookies, 404) | must | Sin cookie, `lang=es` y copy en español; con `ix_locale=en`, copy en inglés |
-| L8 | CTAs de header, hero y cierre apuntan a contacto | must | El destino muestra el formulario |
+| L8 | CTAs de header, hero y cierre apuntan a contacto | must | El destino muestra el formulario. En el export estático el envío abre el correo del visitante, o WhatsApp / un formulario externo si el build los configura. No hay `/api/contact`. |
+| L10 | Export estático para GitHub Pages, con ES/EN en el cliente y `basePath` `/enterprise-systematizer-landing` configurable | must | `next build` escribe `out/` sin error. El workflow despliega en push a `main`. |
 | L9 | Nav principal reducida al relato de la fábrica (proceso, beneficios, casos, contacto). El mega-menú de servicios deja de ser la entrada | must | Esos destinos no se ofrecen en header ni footer |
 
 ## Non-functional

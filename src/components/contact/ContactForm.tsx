@@ -5,11 +5,8 @@ import { FormEvent, useState } from "react";
 import { site } from "@/content/site";
 import { useI18n } from "@/i18n/I18nProvider";
 import { track } from "@/lib/analytics/track";
-import {
-  contactFormSchema,
-  MAX_FILES,
-  validateFiles,
-} from "@/lib/validation/contact";
+import { contactChannel } from "@/lib/contact-channel";
+import { contactFormSchema, validateFiles } from "@/lib/validation/contact";
 import styles from "./ContactForm.module.css";
 
 type Props = {
@@ -74,28 +71,39 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
       return;
     }
 
-    const body = new FormData();
-    Object.entries(parsed.data).forEach(([k, v]) => {
-      if (v === undefined || v === false) return;
-      body.append(k, String(v));
-    });
-    files.slice(0, MAX_FILES).forEach((f) => body.append("files", f));
+    const text = [
+      `${m.form.fullName}: ${parsed.data.fullName}`,
+      `${m.form.businessEmail}: ${parsed.data.businessEmail}`,
+      `${m.form.phone}: ${parsed.data.phone || "-"}`,
+      `${m.form.company}: ${parsed.data.company || "-"}`,
+      `${m.form.role}: ${parsed.data.role || "-"}`,
+      `${m.form.interest}: ${m.form.interestLabels[parsed.data.interest]}`,
+      "",
+      parsed.data.message,
+      parsed.data.assessmentSummary ? `\n${parsed.data.assessmentSummary}` : "",
+    ].join("\n");
 
-    try {
-      const res = await fetch("/api/contact", { method: "POST", body });
-      const json = (await res.json()) as { ok?: boolean; error?: string };
-      if (!res.ok || !json.ok) {
-        setFormError(res.status === 429 ? m.form.errors.rate : m.form.error);
-        setStatus("error");
-        return;
-      }
-      track("form_submit", { interest: parsed.data.interest });
-      setStatus("success");
-      form.reset();
-    } catch {
-      setFormError(m.form.error);
-      setStatus("error");
+    const channel = contactChannel();
+    track("form_submit", { interest: parsed.data.interest });
+
+    if (channel.action) {
+      form.action = channel.action;
+      form.method = "post";
+      form.enctype = "multipart/form-data";
+      form.submit();
+      return;
     }
+
+    if (channel.whatsapp) {
+      window.location.href = `https://wa.me/${channel.whatsapp}?text=${encodeURIComponent(text)}`;
+    } else {
+      const subject = encodeURIComponent("intellerX");
+      const body = encodeURIComponent(text);
+      window.location.href = `mailto:${channel.email}?subject=${subject}&body=${body}`;
+    }
+
+    setStatus("success");
+    form.reset();
   }
 
   if (status === "success") {
@@ -197,6 +205,7 @@ export function ContactForm({ initialMessage = "", assessmentSummary }: Props) {
         {status === "loading" ? m.form.sending : m.form.submit}
       </button>
       <p className={styles.note}>{m.form.note}</p>
+      <p className={styles.note}>{m.form.staticHint}</p>
     </form>
   );
 }
