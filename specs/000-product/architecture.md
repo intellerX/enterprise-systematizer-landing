@@ -97,7 +97,7 @@ Payload includes: name, business email, phone, company, role, interest, message,
 ## Design system
 
 - **Theme:** dark-only. CSS variables for background layers, text, borders, accent (non-purple-default; enterprise high-contrast).
-- **Typography:** distinctive non-default display + body pair (loaded via `next/font`).
+- **Typography:** distinctive non-default display + body pair (self-hosted via `next/font/local`; same `--font-display` / `--font-body` variables).
 - **Motion:** 2–3 intentional motions (e.g. hero entrance, stepper transition, diagram draw); honor `prefers-reduced-motion`.
 - **Hero:** full-bleed visual plane; brand-first; no cards/overlays in first viewport.
 
