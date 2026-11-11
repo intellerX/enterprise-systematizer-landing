@@ -10,6 +10,7 @@ Bootstrap + naming + GitHub conventions: [`../PROJECT_INIT.md`](../PROJECT_INIT.
 | ---- | ------- |
 | `000-product/` | Living product context. Home and language follow `002-factory-landing/` |
 | `002-factory-landing/` | intellerX factory landing (Spanish default, English in sync) |
+| `003-hero-scene/` | Three.js hero backdrop restored from before the factory redesign |
 | `NNN-feature-name/` | Spec for one feature or change |
 | `.cursor/skills/spec-driven-design/` | Agent skill + blank templates |
 

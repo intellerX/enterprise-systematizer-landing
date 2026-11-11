@@ -79,7 +79,7 @@ const es: LandingCopy = {
     headline: "Tu empresa ya tiene AI. Le falta una fábrica.",
     subhead:
       "Contamos con todas las herramientas y modelos de trabajo para que tu empresa se adapte a la AI: automatizaciones, desarrollo ágil y una operación mucho más efectiva.",
-    motto: "La calidad siempre está por encima de todo.",
+    motto: "Cuidamos cada detalle: la calidad va primero, siempre.",
     primary: { label: "Quiero hablar con el equipo", href: "/#contacto" },
     secondary: { label: "Ver cómo trabajamos", href: "/#proceso" },
     panelKicker: "Lo que cambia",
@@ -87,15 +87,15 @@ const es: LandingCopy = {
     highlights: [
       {
         title: "Automatizaciones",
-        body: "La AI entra en el trabajo de todos los días, no en una demo que se apaga el lunes.",
+        body: "Nuestros agentes trabajan para ti: atienden, ejecutan y mejoran tus flujos todos los días, sin que tengas que estar encima.",
       },
       {
         title: "Desarrollo ágil",
-        body: "Primero se escribe qué se va a construir y cómo se acepta. Después se produce.",
+        body: "Antes de construir, acordamos contigo qué se va a hacer y cómo se valida. Así cada entrega llega bien desde la primera vez.",
       },
       {
         title: "Operación efectiva",
-        body: "Tu equipo sabe qué hace la AI, qué decide una persona y cómo se sigue.",
+        body: "Tu equipo entiende y usa nuestras herramientas, agentes y AI para lograr un impacto mucho mayor. Cada empleado, con superpoderes.",
       },
     ],
   },
@@ -240,7 +240,7 @@ const es: LandingCopy = {
     eyebrow: "El equipo",
     title: "Gente para lo cotidiano y para lo sumamente complejo.",
     body: "Contamos con expertos en ingeniería, Arquitectos AI y AI Seniors. No te dejamos solo con una herramienta. Te guiamos en un camino nuevo y de cambio constante.",
-    motto: "La calidad siempre está por encima de todo.",
+    motto: "Cuidamos cada detalle: la calidad va primero, siempre.",
     roles: [
       {
         id: "eng",
@@ -324,7 +324,7 @@ const es: LandingCopy = {
   closing: {
     title: "Si tu empresa va a trabajar con AI, que sea con un camino.",
     body: "Cuéntanos el cambio que necesitas. Respondemos con una forma de trabajar, no con una lista de herramientas.",
-    cta: "Contactar a intellerX",
+    cta: "Contáctanos ahora mismo",
   },
   contact: {
     eyebrow: "Contacto",
@@ -345,7 +345,7 @@ const en: LandingCopy = {
     headline: "Your company already has AI. It needs a factory.",
     subhead:
       "We have the working models for your company to adapt to AI: automation, agile delivery, and a much more effective operation.",
-    motto: "Quality always comes before everything else.",
+    motto: "We care about every detail: quality comes first, always.",
     primary: { label: "Talk with the team", href: "/#contacto" },
     secondary: { label: "See how we work", href: "/#proceso" },
     panelKicker: "What changes",
@@ -353,15 +353,15 @@ const en: LandingCopy = {
     highlights: [
       {
         title: "Automation",
-        body: "AI shows up in everyday work, not in a demo that is gone by Monday.",
+        body: "Our agents work for you: they take care of, run, and improve your flows every day, without you having to watch over them.",
       },
       {
         title: "Agile delivery",
-        body: "We write what will be built and how it is accepted. Then we produce it.",
+        body: "Before we build, we agree with you on what will be done and how it is validated. Each delivery arrives right the first time.",
       },
       {
         title: "A sharper operation",
-        body: "Your team knows what AI does, what a person decides, and how the work continues.",
+        body: "Your team understands and uses our tools, agents, and AI to make a much bigger impact. Every employee, with superpowers.",
       },
     ],
   },
@@ -505,7 +505,7 @@ const en: LandingCopy = {
     eyebrow: "The team",
     title: "People for everyday work and for deeply complex builds.",
     body: "Engineering experts, AI Architects, and AI Seniors. We do not leave you alone with a tool. We guide the company on a new path of constant change.",
-    motto: "Quality always comes before everything else.",
+    motto: "We care about every detail: quality comes first, always.",
     roles: [
       {
         id: "eng",
@@ -589,7 +589,7 @@ const en: LandingCopy = {
   closing: {
     title: "If your company is going to work with AI, give it a path.",
     body: "Tell us the change you need. We answer with a way of working, not a tool list.",
-    cta: "Contact intellerX",
+    cta: "Contact us right now",
   },
   contact: {
     eyebrow: "Contact",

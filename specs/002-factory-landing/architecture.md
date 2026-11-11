@@ -26,6 +26,7 @@ Visitante
 | `getLanding` | Copy de la home ES/EN | Sin stack ni métricas |
 | `FactoryFlow` | Imagen de la fábrica según idioma, lightbox y recorrido de seis pasos | WebP en `public/media/`; diálogo nativo para ampliar |
 | Home sections | Hero, problema, beneficios, automejora, equipo, casos, cierre | Server components con copy por props |
+| `SceneBackdrop` / `HeroScene` | Fondo 3D del hero (Three.js, lazy) | Ver `specs/003-hero-scene/`. No cambia el copy |
 | Nav | Enlaces planos al ancla o a contacto | Ya no usa el mega-menú de servicios |
 
 ## Data

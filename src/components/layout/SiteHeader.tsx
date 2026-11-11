@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { getNavigation } from "@/content/navigation";
-import { site } from "@/content/site";
 import { useI18n } from "@/i18n/I18nProvider";
 import { track } from "@/lib/analytics/track";
 import { LanguageSwitch } from "./LanguageSwitch";
@@ -42,7 +41,7 @@ export function SiteHeader() {
       <div className={`container ${styles.bar}`}>
         <Link className={styles.brand} href="/" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />
-          <span className={styles.brandText}>{site.brand}</span>
+          <span className={styles.brandText}>Andrés Mejía</span>
         </Link>
 
         <LanguageSwitch />
