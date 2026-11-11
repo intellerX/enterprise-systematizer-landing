@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Manrope, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import { AppShell } from "@/components/layout/AppShell";
 import { site } from "@/content/site";
 import { getLanding } from "@/content/landing";
 import "./globals.css";
 
-const display = Outfit({
-  subsets: ["latin"],
+const display = localFont({
+  src: "../../node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2",
   variable: "--font-display",
-  weight: ["500", "600", "700"],
+  weight: "100 900",
 });
 
-const body = Manrope({
-  subsets: ["latin"],
+const body = localFont({
+  src: "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2",
   variable: "--font-body",
-  weight: ["400", "500", "600", "700"],
+  weight: "200 800",
 });
 
 const copy = getLanding("es");
