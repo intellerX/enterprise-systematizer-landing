@@ -1,5 +1,6 @@
 import type { LandingCopy } from "@/content/landing";
 import { HeroCtas } from "./HeroCtas";
+import { SceneBackdrop } from "./SceneBackdrop";
 import styles from "./landing.module.css";
 
 type Props = { copy: LandingCopy["hero"] };
@@ -7,6 +8,8 @@ type Props = { copy: LandingCopy["hero"] };
 export function Hero({ copy }: Props) {
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
+      <SceneBackdrop />
+      <div className={styles.heroScrim} aria-hidden="true" />
       <div className={`container ${styles.heroGrid}`}>
         <div>
           <p className="section__eyebrow">{copy.eyebrow}</p>

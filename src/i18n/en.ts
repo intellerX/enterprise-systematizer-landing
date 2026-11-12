@@ -5,7 +5,7 @@ export const en = {
   nav: {
     openMenu: "Open menu",
     closeMenu: "Close menu",
-    contact: "Contact",
+    contact: "Contact us right now",
     primary: "Primary",
     language: "Language",
   },
@@ -76,7 +76,7 @@ export const en = {
     sitemap: "Sitemap",
     rights: "All rights reserved.",
     tagline:
-      "An AI-powered software factory. Quality always comes before everything else.",
+      "An AI-powered software factory. We care about every detail: quality comes first, always.",
     legalLinks: [
       { href: "/legal/privacy", label: "Privacy" },
       { href: "/legal/terms", label: "Terms" },

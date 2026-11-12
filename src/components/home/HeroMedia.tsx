@@ -18,8 +18,9 @@ export function HeroMedia({ children }: Props) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [sceneOn, setSceneOn] = useState(false);
+  const progressRef = useRef(0);
+  const pointerRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -72,7 +73,7 @@ export function HeroMedia({ children }: Props) {
         const rect = root.getBoundingClientRect();
         const travel = Math.max(rect.height, window.innerHeight);
         const progress = Math.min(1, Math.max(0, -rect.top / travel));
-        setScrollProgress(progress);
+        progressRef.current = progress;
 
         if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           const shift = progress * 160;
@@ -127,7 +128,9 @@ export function HeroMedia({ children }: Props) {
         {sceneOn ? (
           <HeroScene
             reducedMotion={reducedMotion}
-            scrollProgress={scrollProgress}
+            detail="full"
+            progressRef={progressRef}
+            pointerRef={pointerRef}
           />
         ) : null}
         <div className={styles.grade} />

@@ -1,22 +1,38 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import styles from "./Hero.module.css";
 
+type Detail = "full" | "low";
+
 type Props = {
   reducedMotion: boolean;
-  scrollProgress: number;
+  detail: Detail;
+  progressRef: RefObject<number>;
+  pointerRef: RefObject<{ x: number; y: number }>;
 };
 
-/** Floating enterprise panels/nodes. Isolated via dynamic import so failures never blank the video. */
-export function HeroScene({ reducedMotion, scrollProgress }: Props) {
-  const mountRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef(scrollProgress);
+const PANEL_CONFIGS = [
+  { x: -1.9, y: 0.9, z: -0.2, rot: 0.2, color: 0x7aa2ff },
+  { x: 0.2, y: 1.15, z: -0.9, rot: -0.15, color: 0x8ee7ff },
+  { x: 1.85, y: 0.4, z: 0.05, rot: 0.24, color: 0xb9cbff },
+  { x: -1.0, y: -0.55, z: 0.45, rot: -0.18, color: 0x6d8cff },
+  { x: 1.25, y: -0.85, z: -0.35, rot: 0.12, color: 0x9eb6ff },
+];
 
-  useEffect(() => {
-    progressRef.current = scrollProgress;
-  }, [scrollProgress]);
+const NODE_POS = [
+  [-2.2, 1.35, 0.3],
+  [0.55, 1.55, -0.4],
+  [2.25, 0.75, 0.25],
+  [-0.15, -1.1, 0.55],
+  [2.0, -1.15, 0],
+  [-1.85, -0.15, 0.65],
+] as const;
+
+/** Floating glass panels and nodes. Same scene as before the factory redesign, retinted indigo. */
+export function HeroScene({ reducedMotion, detail, progressRef, pointerRef }: Props) {
+  const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -27,15 +43,18 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
     let renderer: THREE.WebGLRenderer | null = null;
 
     try {
-      const width = Math.max(mount.clientWidth, window.innerWidth, 320);
-      const height = Math.max(mount.clientHeight, window.innerHeight * 0.7, 320);
+      const low = detail === "low";
+      const width = Math.max(mount.clientWidth, low ? 320 : window.innerWidth, 320);
+      const height = Math.max(mount.clientHeight, low ? 320 : window.innerHeight * 0.7, 320);
+      const configs = low ? PANEL_CONFIGS.slice(0, 3) : PANEL_CONFIGS;
+      const nodePos = low ? NODE_POS.slice(0, 3) : NODE_POS;
 
       renderer = new THREE.WebGLRenderer({
-        antialias: true,
+        antialias: !low,
         alpha: true,
-        powerPreference: "default",
+        powerPreference: low ? "low-power" : "default",
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(low ? 1 : Math.min(window.devicePixelRatio || 1, 1.5));
       renderer.setSize(width, height, false);
       renderer.setClearColor(0x000000, 0);
       renderer.domElement.style.width = "100%";
@@ -49,32 +68,23 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
       const root = new THREE.Group();
       scene.add(root);
 
-      scene.add(new THREE.AmbientLight(0xd7eaf5, 0.85));
-      const key = new THREE.DirectionalLight(0x7ef0d0, 1.4);
+      scene.add(new THREE.AmbientLight(0xd7e2ff, 0.7));
+      const key = new THREE.DirectionalLight(0x8ee7ff, 1.15);
       key.position.set(2.5, 3.5, 4);
       scene.add(key);
-
-      const configs = [
-        { x: -1.9, y: 0.9, z: -0.2, rot: 0.2, color: 0x3dbaa0 },
-        { x: 0.2, y: 1.15, z: -0.9, rot: -0.15, color: 0x7ec8e3 },
-        { x: 1.85, y: 0.4, z: 0.05, rot: 0.24, color: 0x5ad0b8 },
-        { x: -1.0, y: -0.55, z: 0.45, rot: -0.18, color: 0x9fe8d8 },
-        { x: 1.25, y: -0.85, z: -0.35, rot: 0.12, color: 0x3dbaa0 },
-      ];
 
       const panelGeo = new THREE.PlaneGeometry(1.4, 0.9);
       const panels: THREE.Mesh[] = [];
 
       for (const cfg of configs) {
-        // Avoid MeshPhysicalMaterial transmission (often invisible / expensive)
         const mat = new THREE.MeshStandardMaterial({
           color: cfg.color,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.32,
           roughness: 0.35,
           metalness: 0.25,
           emissive: cfg.color,
-          emissiveIntensity: 0.18,
+          emissiveIntensity: 0.16,
           side: THREE.DoubleSide,
         });
         const mesh = new THREE.Mesh(panelGeo, mat);
@@ -86,9 +96,9 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
         const edge = new THREE.LineSegments(
           new THREE.EdgesGeometry(panelGeo),
           new THREE.LineBasicMaterial({
-            color: 0xe8f7f3,
+            color: 0xdbe4ff,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.62,
           }),
         );
         edge.position.copy(mesh.position);
@@ -96,20 +106,12 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
         root.add(edge);
       }
 
-      const nodeGeo = new THREE.SphereGeometry(0.06, 16, 16);
+      const nodeGeo = new THREE.SphereGeometry(0.06, low ? 8 : 16, low ? 8 : 16);
       const nodeMat = new THREE.MeshStandardMaterial({
-        color: 0xb8fff0,
-        emissive: 0x3dbaa0,
-        emissiveIntensity: 1.1,
+        color: 0xd5e4ff,
+        emissive: 0x6d8cff,
+        emissiveIntensity: 0.9,
       });
-      const nodePos = [
-        [-2.2, 1.35, 0.3],
-        [0.55, 1.55, -0.4],
-        [2.25, 0.75, 0.25],
-        [-0.15, -1.1, 0.55],
-        [2.0, -1.15, 0],
-        [-1.85, -0.15, 0.65],
-      ] as const;
       const nodes: THREE.Mesh[] = [];
       for (const [x, y, z] of nodePos) {
         const n = new THREE.Mesh(nodeGeo, nodeMat);
@@ -119,9 +121,9 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
       }
 
       const lineMat = new THREE.LineBasicMaterial({
-        color: 0x7ec8e3,
+        color: 0x8ee7ff,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.32,
       });
       for (let i = 0; i < nodes.length - 1; i++) {
         const geo = new THREE.BufferGeometry().setFromPoints([
@@ -131,19 +133,21 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
         root.add(new THREE.Line(geo, lineMat));
       }
 
-      const grid = new THREE.GridHelper(12, 24, 0x3dbaa0, 0x243246);
-      grid.position.y = -1.7;
-      const gm = grid.material;
-      if (Array.isArray(gm)) {
-        gm.forEach((m) => {
-          m.transparent = true;
-          m.opacity = 0.45;
-        });
-      } else {
-        gm.transparent = true;
-        gm.opacity = 0.45;
+      if (!low) {
+        const grid = new THREE.GridHelper(12, 24, 0x8ee7ff, 0x1c2a52);
+        grid.position.y = -1.7;
+        const gm = grid.material;
+        if (Array.isArray(gm)) {
+          gm.forEach((m) => {
+            m.transparent = true;
+            m.opacity = 0.28;
+          });
+        } else {
+          gm.transparent = true;
+          gm.opacity = 0.28;
+        }
+        scene.add(grid);
       }
-      scene.add(grid);
 
       const start = performance.now();
 
@@ -160,16 +164,18 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
       const tick = (now: number) => {
         if (disposed || !renderer) return;
         const t = (now - start) / 1000;
-        const p = progressRef.current;
+        const p = progressRef.current ?? 0;
+        const pointer = pointerRef.current ?? { x: 0, y: 0 };
 
         if (!reducedMotion) {
           root.position.y = -p * 1.5;
-          root.rotation.y = p * 0.32 + Math.sin(t * 0.35) * 0.06;
-          root.rotation.x = p * 0.1;
+          root.rotation.y = p * 0.32 + Math.sin(t * 0.35) * 0.06 + pointer.x * 0.14;
+          root.rotation.x = p * 0.1 - pointer.y * 0.08;
+          camera.position.x = pointer.x * 0.28;
+          camera.position.y = 0.2 - pointer.y * 0.16;
           camera.position.z = 5.6 + p * 1.1;
           panels.forEach((mesh, i) => {
-            mesh.position.y =
-              configs[i].y + Math.sin(t * 0.8 + i) * 0.1 - p * 0.4;
+            mesh.position.y = configs[i].y + Math.sin(t * 0.8 + i) * 0.1 - p * 0.4;
           });
         }
 
@@ -179,7 +185,6 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
 
       renderer.render(scene, camera);
       if (!reducedMotion) raf = requestAnimationFrame(tick);
-      else renderer.render(scene, camera);
 
       return () => {
         disposed = true;
@@ -196,7 +201,7 @@ export function HeroScene({ reducedMotion, scrollProgress }: Props) {
       console.error("[HeroScene] WebGL init failed", err);
       return;
     }
-  }, [reducedMotion]);
+  }, [reducedMotion, detail, progressRef, pointerRef]);
 
   return <div className={styles.scene} ref={mountRef} aria-hidden data-hero-scene="1" />;
 }

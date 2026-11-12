@@ -1,8 +1,33 @@
 .hero {
   position: relative;
   overflow: hidden;
+  min-height: clamp(28rem, 72vh, 48rem);
   padding: 3.5rem 0 3.25rem;
   border-bottom: 1px solid var(--line);
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.58;
+}
+
+.scene canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(7, 11, 24, 0.78) 0%, rgba(7, 11, 24, 0.42) 48%, rgba(7, 11, 24, 0.18) 100%),
+    linear-gradient(180deg, rgba(7, 11, 24, 0.2) 0%, transparent 28%, rgba(7, 11, 24, 0.55) 100%);
 }
 
 .hero::before {
@@ -25,6 +50,10 @@
   position: relative;
   display: grid;
   gap: 1.25rem;
+}
+
+.heroGrid {
+  z-index: 2;
 }
 
 .hero h1 {

@@ -5,7 +5,7 @@ export const es = {
   nav: {
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
-    contact: "Contacto",
+    contact: "Contáctanos ahora mismo",
     primary: "Principal",
     language: "Idioma",
   },
@@ -75,7 +75,7 @@ export const es = {
     legal: "Legal",
     sitemap: "Mapa",
     rights: "Todos los derechos reservados.",
-    tagline: "Fábrica de software potenciada por AI. La calidad siempre está por encima de todo.",
+    tagline: "Fábrica de software potenciada por AI. Cuidamos cada detalle: la calidad va primero, siempre.",
     legalLinks: [
       { href: "/legal/privacy", label: "Privacidad" },
       { href: "/legal/terms", label: "Términos" },
